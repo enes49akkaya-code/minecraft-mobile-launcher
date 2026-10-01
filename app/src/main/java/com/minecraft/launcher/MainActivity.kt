@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 class MainActivity : AppCompatActivity() {
 
     private val prefs by lazy { LauncherPreferences(this) }
+    private val javaRuntimeManager by lazy { JavaRuntimeManager(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,16 +26,24 @@ class MainActivity : AppCompatActivity() {
             loadingBar.visibility = View.VISIBLE
             playButton.isEnabled = false
 
-            val javaPath = prefs.getJavaPath()
-            val javaArgs = prefs.getJavaArgs()
+            val javaPath = javaRuntimeManager.findJavaRuntime() ?: prefs.getJavaPath()
+            val hasJava = javaPath != null && javaRuntimeManager.verifyJavaInstallation(javaPath)
+
+            if (!hasJava) {
+                loadingBar.visibility = View.GONE
+                playButton.isEnabled = true
+                Toast.makeText(this, "Java bulunamadı. Java yolu ayarlarını kontrol edin.", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            val playerName = prefs.getPlayerName()
             val serverIp = prefs.getServerIp()
             val serverPort = prefs.getServerPort()
             val memoryMb = prefs.getMemoryMb()
-            val playerName = prefs.getPlayerName()
 
             val launchResult = MinecraftLauncher.startGame(
                 javaPath = javaPath,
-                javaArgs = javaArgs,
+                javaArgs = prefs.getJavaArgs(),
                 playerName = playerName,
                 serverIp = serverIp,
                 serverPort = serverPort,

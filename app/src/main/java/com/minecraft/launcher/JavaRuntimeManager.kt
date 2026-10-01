@@ -1,1 +1,64 @@
-package com.minecraft.launcher\n\nimport android.content.Context\nimport android.util.Log\nimport java.io.File\n\nclass JavaRuntimeManager(private val context: Context) {\n\n    companion object {\n        private const val TAG = \"JavaRuntimeManager\"\n        private const val JAVA_PATHS = \"/data/data/com.minecraft.launcher/java:/system/bin/java:/system/xbin/java\"\n    }\n\n    fun findJavaRuntime(): String? {\n        val javaLocations = listOf(\n            \"/data/data/com.minecraft.launcher/java\",\n            \"/system/bin/java\",\n            \"/system/xbin/java\",\n            \"/usr/bin/java\",\n            context.getExternalFilesDir(null)?.absolutePath + \"/java\"\n        )\n\n        for (path in javaLocations) {\n            val javaFile = File(path)\n            if (javaFile.exists() && javaFile.canExecute()) {\n                Log.d(TAG, \"Java found at: $path\")\n                return path\n            }\n        }\n\n        Log.w(TAG, \"No Java runtime found in standard locations\")\n        return null\n    }\n\n    fun verifyJavaInstallation(javaPath: String): Boolean {\n        return try {\n            val process = ProcessBuilder(javaPath, \"-version\")\n                .redirectErrorStream(true)\n                .start()\n\n            val result = process.waitFor()\n            Log.d(TAG, \"Java verification result: $result\")\n            result == 0\n        } catch (e: Exception) {\n            Log.e(TAG, \"Java verification failed: ${e.message}\")\n            false\n        }\n    }\n\n    fun getJavaVersion(javaPath: String): String? {\n        return try {\n            val process = ProcessBuilder(javaPath, \"-version\")\n                .redirectErrorStream(true)\n                .start()\n\n            val output = process.inputStream.bufferedReader().use { it.readText() }\n            process.waitFor()\n            output.trim()\n        } catch (e: Exception) {\n            Log.e(TAG, \"Failed to get Java version: ${e.message}\")\n            null\n        }\n    }\n}\n
+package com.minecraft.launcher
+
+import android.content.Context
+import android.util.Log
+import java.io.File
+
+class JavaRuntimeManager(private val context: Context) {
+
+    companion object {
+        private const val TAG = "JavaRuntimeManager"
+    }
+
+    fun findJavaRuntime(): String? {
+        val javaLocations = listOf(
+            "/data/data/com.minecraft.launcher/java",
+            "/system/bin/java",
+            "/system/xbin/java",
+            "/usr/bin/java",
+            context.getExternalFilesDir(null)?.absolutePath + "/java",
+            "/storage/emulated/0/java/bin/java"
+        )
+
+        for (path in javaLocations) {
+            val javaFile = File(path)
+            if (javaFile.exists() && javaFile.canExecute()) {
+                Log.d(TAG, "Java found at: $path")
+                return path
+            }
+        }
+
+        Log.w(TAG, "No Java runtime found in standard locations")
+        return null
+    }
+
+    fun verifyJavaInstallation(javaPath: String): Boolean {
+        return try {
+            val process = ProcessBuilder(javaPath, "-version")
+                .redirectErrorStream(true)
+                .start()
+
+            val result = process.waitFor()
+            Log.d(TAG, "Java verification result: $result")
+            result == 0
+        } catch (e: Exception) {
+            Log.e(TAG, "Java verification failed: ${e.message}")
+            false
+        }
+    }
+
+    fun getJavaVersion(javaPath: String): String? {
+        return try {
+            val process = ProcessBuilder(javaPath, "-version")
+                .redirectErrorStream(true)
+                .start()
+
+            val output = process.inputStream.bufferedReader().use { it.readText() }
+            process.waitFor()
+            output.trim()
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to get Java version: ${e.message}")
+            null
+        }
+    }
+}
