@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.MinecraftLauncher" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">#3E7DFF</item>
+        <item name="colorPrimaryVariant">#275DD9</item>
+        <item name="colorSecondary">#1ABC9C</item>
+        <item name="android:statusBarColor">#101820</item>
+        <item name="android:navigationBarColor">#101820</item>
+    </style>
+</resources>

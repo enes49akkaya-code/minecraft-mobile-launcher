@@ -1,22 +1,29 @@
 # Minecraft Java Mobile Launcher
 
-Android için Minecraft Java Edition launcher uygulaması.
+Bu proje, Android için Java Edition Minecraft launcher arayüzü ve başlatma mantığı örneğidir. Bu uygulama, `Mojo Launcher` ve `PojavLauncher` gibi projelerin çalışma mantığından esinlenerek hazırlanmıştır.
+
+Not: Bu repo sadece başlangıç / örnek uygulama yapısıdır. Gerçek mobil Java Edition çalıştırma için Android cihazda özel Java runtime (ör. PojavLauncher tarzı çözümler), Minecraft JAR dosyaları ve uygun uygulama düzeni gerekir.
 
 ## Özellikler
-- Java Edition Minecraft başlatma
-- Oyuncu adı ayarları
-- Sunucu IP ve port ayarları
-- Tek butonla oyun başlatma
-- RAM ayarları
-- Mojo Launcher benzeri UI
+- Mojo benzeri ana ekran
+- Oyna butonu
+- Ayarlar ekranı
+- Kayıtlı oyuncu adı, Java yolu, RAM, sunucu bilgileri
+- Java başlatma komutunun üretimi
+- Tek tıkla launch akışı
 
-## Gereklilikler
-- Android 8.0+
-- Minecraft Java Edition dosyaları
-- PojavLauncher entegrasyonu
+## Kullanım
+1. Android Studio ile projeyi açın.
+2. Gradle sync edin.
+3. Emulator veya cihazda çalıştırın.
+4. Ayarlar ekranından Java yolu ve sunucu bilgilerini girin.
+5. Oyna butonuna basın.
 
-## Kurulum
-1. Projeyi klonlayın
-2. Android Studio'da açın
-3. Build edin
-4. APK oluşturun
+## Dikkat
+- Bu örnek, gerçek Minecraft Java istemcisini Android cihazda doğrudan çalıştırmak için bir tam runtime değildir.
+- Gerçek üretim kullanımında PojavLauncher / MojoLauncher tabanlı sistemler ve uygun Java runtime gereklidir.
+
+## Yapı
+- `app/src/main/java/...` - Kotlin kaynakları
+- `app/src/main/res/layout` - UI tasarımları
+- `app/src/main/res/values` - metinler ve renkler
